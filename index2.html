@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圖像化編程：多重條件判斷教學</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f7ff;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            padding: 25px 0;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        h2 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        
+        h3 {
+            color: #2980b9;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #3498db;
+        }
+        
+        .card.difference {
+            border-left-color: #9b59b6;
+        }
+        
+        .card.practice {
+            border-left-color: #2ecc71;
+        }
+        
+        .card.multiple {
+            border-left-color: #e74c3c;
+        }
+        
+        .blocks-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .block {
+            background: #ecf0f1;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .block:hover {
+            transform: translateY(-5px);
+        }
+        
+        .block-title {
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .block-visual {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 2px dashed #bdc3c7;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .if-block {
+            color: #e74c3c;
+        }
+        
+        .if-else-block {
+            color: #27ae60;
+        }
+        
+        .if-elseif-block {
+            color: #9b59b6;
+        }
+        
+        .example {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #f1c40f;
+        }
+        
+        .example-title {
+            font-weight: bold;
+            color: #d35400;
+            margin-bottom: 10px;
+        }
+        
+        .interactive-area {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid #3498db;
+        }
+        
+        .scenario {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .scenario-item {
+            flex: 1;
+            min-width: 200px;
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .scenario-item:hover {
+            background: #e8f4fc;
+        }
+        
+        .scenario-item.selected {
+            border-color: #3498db;
+            background: #e8f4fc;
+            box-shadow: 0 5px 10px rgba(52, 152, 219, 0.2);
+        }
+        
+        .result-area {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            min-height: 100px;
+            border: 2px dashed #bdc3c7;
+            text-align: center;
+            font-size: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        /* 修改練習區域為2x2網格 */
+        .practice-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .practice-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .practice-item {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #eee;
+        }
+        
+        .practice-question {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .practice-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .practice-option {
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid #ddd;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .practice-option:hover {
+            background: #f0f8ff;
+        }
+        
+        /* 選中答案的明顯標示 */
+        .practice-option.selected {
+            border-color: #3498db;
+            background-color: #e8f4fc;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .practice-option.selected::after {
+            content: "✓";
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #3498db;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .practice-option.correct {
+            border-color: #2ecc71;
+            background: #eafaf1;
+        }
+        
+        .practice-option.incorrect {
+            border-color: #e74c3c;
+            background: #fdedec;
+        }
+        
+        /* 鎖定狀態 - 檢查答案後不能選擇 */
+        .practice-option.locked {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+        
+        .practice-option.locked:hover {
+            background: inherit;
+        }
+        
+        .feedback {
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .feedback.show {
+            display: block;
+        }
+        
+        .feedback.correct {
+            background: #d5f4e6;
+            color: #27ae60;
+            border-left: 4px solid #2ecc71;
+        }
+        
+        .feedback.incorrect {
+            background: #fadbd8;
+            color: #c0392b;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+        
+        button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        button.reset {
+            background: #e74c3c;
+        }
+        
+        button.reset:hover {
+            background: #c0392b;
+        }
+        
+        button.new-questions {
+            background: #9b59b6;
+        }
+        
+        button.new-questions:hover {
+            background: #8e44ad;
+        }
+        
+        .icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+        
+        .conclusion {
+            background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+        
+        .conclusion h2 {
+            color: white;
+            border-bottom-color: white;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #7f8c8d;
+        }
+        
+        .question-counter {
+            margin-top: 15px;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        
+        .multiple-condition-visual {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #9b59b6;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+        
+        .grade-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .grade-table th, .grade-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        .grade-table th {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .grade-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .grade-table tr:hover {
+            background-color: #e8f4fc;
+        }
+        
+        .slider-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .slider-container label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .slider-container input[type="range"] {
+            width: 100%;
+            max-width: 500px;
+            margin: 10px 0;
+        }
+        
+        .slider-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #3498db;
+            margin-top: 10px;
+        }
+        
+        .flowchart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+        }
+        
+        .flowchart-step {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #3498db;
+        }
+        
+        .flowchart-arrow {
+            font-size: 2rem;
+            color: #3498db;
+            margin: 5px 0;
+        }
+        
+        .comparison-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .comparison-item {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .comparison-title {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .blocks-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .block {
+                width: 100%;
+                max-width: 350px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-code icon"></i>圖像化編程：條件判斷積木</h1>
+            <div class="subtitle">學習『如果那麼』、『如果那麼否則』與『多重條件判斷』的區別與應用</div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <h2><i class="fas fa-info-circle icon"></i>課程介紹</h2>
+            <p>歡迎來到圖像化編程的世界！今天我們要學習程式設計中非常重要的概念：<strong>條件判斷</strong>。這就像生活中的選擇題，程式會根據不同的情況做出不同的反應。</p>
+            <p>我們將通過圖像化的積木來理解三種條件判斷：<strong>「如果那麼」</strong>、<strong>「如果那麼否則」</strong>和<strong>「多重條件判斷」</strong>積木。</p>
+        </div>
+        
+        <h2><i class="fas fa-puzzle-piece icon"></i>認識條件判斷積木</h2>
+        <div class="blocks-container">
+            <div class="block">
+                <div class="block-title if-block">「如果那麼」積木</div>
+                <div class="block-visual">
+                    <div style="color: #e74c3c; font-weight: bold; margin-bottom: 10px;">如果 &lt;條件&gt; 那麼</div>
+                    <div style="padding-left: 20px; color: #3498db;">執行某些動作</div>
+                    <div style="color: #e74c3c; font-weight: bold;">結束</div>
+                </div>
+                <p>當條件成立時，執行積木內部的動作；如果條件不成立，就跳過這個積木，繼續執行後面的程式。</p>
+                <p><strong>特點：</strong>只有一種情況會執行動作</p>
+            </div>
+            
+            <div class="block">
+                <div class="block-title if-else-block">「如果那麼否則」積木</div>
+                <div class="block-visual">
+                    <div style="color: #27ae60; font-weight: bold; margin-bottom: 10px;">如果 &lt;條件&gt; 那麼</div>
+                    <div style="padding-left: 20px; color: #3498db;">執行第一組動作</div>
+                    <div style="color: #27ae60; font-weight: bold;">否則</div>
+                    <div style="padding-left: 20px; color: #9b59b6;">執行第二組動作</div>
+                    <div style="color: #27ae60; font-weight: bold;">結束</div>
+                </div>
+                <p>當條件成立時，執行「那麼」部分的動作；當條件不成立時，執行「否則」部分的動作。</p>
+                <p><strong>特點：</strong>兩種情況都會有對應的動作</p>
+            </div>
+            
+            <div class="block">
+                <div class="block-title if-elseif-block">多重條件判斷積木</div>
+                <div class="block-visual">
+                    <div style="color: #9b59b6; font-weight: bold; margin-bottom: 5px;">如果 &lt;條件1&gt; 那麼</div>
+                    <div style="padding-left: 20px; color: #3498db;">執行動作1</div>
+                    <div style="color: #9b59b6; font-weight: bold; margin-top: 5px;">否則如果 &lt;條件2&gt; 那麼</div>
+                    <div style="padding-left: 20px; color: #e74c3c;">執行動作2</div>
+                    <div style="color: #9b59b6; font-weight: bold; margin-top: 5px;">否則如果 &lt;條件3&gt; 那麼</div>
+                    <div style="padding-left: 20px; color: #27ae60;">執行動作3</div>
+                    <div style="color: #9b59b6; font-weight: bold; margin-top: 5px;">否則</div>
+                    <div style="padding-left: 20px; color: #f39c12;">執行預設動作</div>
+                    <div style="color: #9b59b6; font-weight: bold; margin-top: 5px;">結束</div>
+                </div>
+                <p>可以檢查多個條件，根據不同的情況執行不同的動作。</p>
+                <p><strong>特點：</strong>可以處理三種或更多種情況</p>
+            </div>
+        </div>
+        
+        <div class="card difference">
+            <h2><i class="fas fa-exchange-alt icon"></i>三種積木的區別</h2>
+            <div class="comparison-container">
+                <div class="comparison-item">
+                    <div class="comparison-title">「如果那麼」積木</div>
+                    <p><strong>適用情境：</strong>只需要處理一種情況</p>
+                    <p><strong>範例：</strong>如果下雨，就帶傘</p>
+                    <p><strong>結果：</strong>只有下雨時帶傘，不下雨時不做任何事</p>
+                </div>
+                
+                <div class="comparison-item">
+                    <div class="comparison-title">「如果那麼否則」積木</div>
+                    <p><strong>適用情境：</strong>需要處理兩種相反情況</p>
+                    <p><strong>範例：</strong>如果下雨，就帶傘；否則不帶傘</p>
+                    <p><strong>結果：</strong>下雨帶傘，不下雨不帶傘</p>
+                </div>
+                
+                <div class="comparison-item">
+                    <div class="comparison-title">多重條件判斷積木</div>
+                    <p><strong>適用情境：</strong>需要處理三種或更多種情況</p>
+                    <p><strong>範例：</strong>根據溫度決定穿衣：如果溫度>30℃，穿短袖；否則如果溫度>20℃，穿長袖；否則穿外套</p>
+                    <p><strong>結果：</strong>根據不同溫度範圍做出不同決定</p>
+                </div>
+            </div>
+            
+            <div class="example">
+                <div class="example-title">生活實例比較：考試成績評等</div>
+                
+                <div class="flowchart">
+                    <div class="flowchart-step">
+                        <strong>「如果那麼」積木：</strong><br>
+                        如果 分數 >= 60 那麼<br>
+                        &nbsp;&nbsp;顯示「及格」<br>
+                        結束
+                    </div>
+                    
+                    <div class="flowchart-arrow">↓</div>
+                    
+                    <div class="flowchart-step">
+                        <strong>「如果那麼否則」積木：</strong><br>
+                        如果 分數 >= 60 那麼<br>
+                        &nbsp;&nbsp;顯示「及格」<br>
+                        否則<br>
+                        &nbsp;&nbsp;顯示「不及格」<br>
+                        結束
+                    </div>
+                    
+                    <div class="flowchart-arrow">↓</div>
+                    
+                    <div class="flowchart-step">
+                        <strong>多重條件判斷積木：</strong><br>
+                        如果 分數 >= 90 那麼<br>
+                        &nbsp;&nbsp;顯示「優秀」<br>
+                        否則如果 分數 >= 80 那麼<br>
+                        &nbsp;&nbsp;顯示「良好」<br>
+                        否則如果 分數 >= 70 那麼<br>
+                        &nbsp;&nbsp;顯示「中等」<br>
+                        否則如果 分數 >= 60 那麼<br>
+                        &nbsp;&nbsp;顯示「及格」<br>
+                        否則<br>
+                        &nbsp;&nbsp;顯示「不及格」<br>
+                        結束
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card multiple">
+            <h2><i class="fas fa-sitemap icon"></i>多重條件判斷：進階應用</h2>
+            
+            <h3>什麼是多重條件判斷？</h3>
+            <p>當我們需要根據多種不同情況做出不同決定時，就需要使用多重條件判斷。這就像一個決策樹，根據不同的條件分支到不同的結果。</p>
+            
+            <div class="multiple-condition-visual">
+                <div style="color: #9b59b6; font-weight: bold; margin-bottom: 5px;">如果 &lt;條件1&gt; 那麼</div>
+                <div style="padding-left: 20px; color: #3498db;">執行動作1</div>
+                <div style="color: #9b59b6; font-weight: bold; margin-top: 5px;">否則如果 &lt;條件2&gt; 那麼</div>
+                <div style="padding-left: 20px; color: #e74c3c;">執行動作2</div>
+                <div style="color: #9b59b6; font-weight: bold; margin-top: 5px;">否則如果 &lt;條件3&gt; 那麼</div>
+                <div style="padding-left: 20px; color: #27ae60;">執行動作3</div>
+                <div style="color: #9b59b6; font-weight: bold; margin-top: 5px;">...（可以繼續添加更多條件）</div>
+                <div style="color: #9b59b6; font-weight: bold; margin-top: 5px;">否則</div>
+                <div style="padding-left: 20px; color: #f39c12;">執行預設動作</div>
+                <div style="color: #9b59b6; font-weight: bold; margin-top: 5px;">結束</div>
+            </div>
+            
+            <h3>實例：天氣穿衣建議系統</h3>
+            <p>讓我們設計一個根據天氣狀況提供穿衣建議的系統：</p>
+            
+            <table class="grade-table">
+                <thead>
+                    <tr>
+                        <th>溫度條件</th>
+                        <th>天氣條件</th>
+                        <th>穿衣建議</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>溫度 &lt; 10℃</td>
+                        <td>任何天氣</td>
+                        <td>穿羽絨外套</td>
+                    </tr>
+                    <tr>
+                        <td>10℃ ≤ 溫度 &lt; 20℃</td>
+                        <td>晴天</td>
+                        <td>穿薄外套</td>
+                    </tr>
+                    <tr>
+                        <td>10℃ ≤ 溫度 &lt; 20℃</td>
+                        <td>雨天</td>
+                        <td>穿防水外套</td>
+                    </tr>
+                    <tr>
+                        <td>20℃ ≤ 溫度 &lt; 30℃</td>
+                        <td>晴天</td>
+                        <td>穿短袖</td>
+                    </tr>
+                    <tr>
+                        <td>20℃ ≤ 溫度 &lt; 30℃</td>
+                        <td>雨天</td>
+                        <td>穿短袖+帶雨傘</td>
+                    </tr>
+                    <tr>
+                        <td>溫度 ≥ 30℃</td>
+                        <td>任何天氣</td>
+                        <td>穿涼爽衣物</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="example">
+                <div class="example-title">對應的程式邏輯：</div>
+                <div class="multiple-condition-visual">
+                    如果 溫度 &lt; 10 那麼<br>
+                    &nbsp;&nbsp;建議 = "穿羽絨外套"<br>
+                    否則如果 溫度 &lt; 20 那麼<br>
+                    &nbsp;&nbsp;如果 天氣 == "晴天" 那麼<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;建議 = "穿薄外套"<br>
+                    &nbsp;&nbsp;否則<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;建議 = "穿防水外套"<br>
+                    &nbsp;&nbsp;結束<br>
+                    否則如果 溫度 &lt; 30 那麼<br>
+                    &nbsp;&nbsp;如果 天氣 == "晴天" 那麼<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;建議 = "穿短袖"<br>
+                    &nbsp;&nbsp;否則<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;建議 = "穿短袖+帶雨傘"<br>
+                    &nbsp;&nbsp;結束<br>
+                    否則<br>
+                    &nbsp;&nbsp;建議 = "穿涼爽衣物"<br>
+                    結束
+                </div>
+                <p>注意：這裡我們使用了「巢狀條件判斷」，即在條件判斷內部再使用條件判斷，這可以處理更複雜的情況！</p>
+            </div>
+        </div>
+        
+        <h2><i class="fas fa-gamepad icon"></i>互動練習：選擇正確的積木</h2>
+        <div class="interactive-area">
+            <h3>情境：判斷應使用哪種條件判斷積木</h3>
+            <p>請根據不同的情境，選擇應該使用哪一種條件判斷積木：</p>
+            <div class="question-counter">題庫共有20題，每次隨機抽取4題進行練習</div>
+            
+            <div class="practice-container" id="practiceContainer">
+                <!-- 動態生成練習題目 -->
+            </div>
+            
+            <div class="practice-controls">
+                <button id="checkAnswers"><i class="fas fa-check-circle icon"></i>檢查答案</button>
+                <button class="reset" id="resetPractice"><i class="fas fa-redo icon"></i>重新練習</button>
+                <button class="new-questions" id="newQuestions"><i class="fas fa-random icon"></i>換一批題目</button>
+            </div>
+            
+            <div id="practiceSummary" style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 8px; display: none;">
+                <h4 style="margin-top: 0;">練習結果</h4>
+                <p>正確題數：<span id="correctCount">0</span>/<span id="totalQuestions">4</span></p>
+                <div id="summaryMessage"></div>
+            </div>
+        </div>
+        
+        <h2><i class="fas fa-laptop-code icon"></i>情境模擬：多重條件判斷應用</h2>
+        <div class="interactive-area">
+            <h3>程式設計情境：考試成績評等系統</h3>
+            <p>我們要設計一個考試成績評等系統，根據不同的分數給予不同的評等和建議。</p>
+            
+            <div class="slider-container">
+                <label for="scoreSlider">請輸入考試分數：</label>
+                <input type="range" id="scoreSlider" min="0" max="100" value="50" style="width: 100%; max-width: 500px;">
+                <div class="slider-value" id="scoreValue">目前分數：50分</div>
+            </div>
+            
+            <div style="text-align: center; margin: 20px 0;">
+                <button id="runGradeProgram"><i class="fas fa-play-circle icon"></i>執行程式</button>
+                <button class="reset" id="resetGradeProgram"><i class="fas fa-redo icon"></i>重新開始</button>
+            </div>
+            
+            <div class="result-area" id="gradeProgramResult">
+                請點擊「執行程式」按鈕查看結果
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <h4>程式邏輯：</h4>
+                <div class="multiple-condition-visual">
+                    如果 分數 >= 90 那麼<br>
+                    &nbsp;&nbsp;評等 = "A"<br>
+                    &nbsp;&nbsp;建議 = "優秀！保持下去！"<br>
+                    否則如果 分數 >= 80 那麼<br>
+                    &nbsp;&nbsp;評等 = "B"<br>
+                    &nbsp;&nbsp;建議 = "良好！繼續努力！"<br>
+                    否則如果 分數 >= 70 那麼<br>
+                    &nbsp;&nbsp;評等 = "C"<br>
+                    &nbsp;&nbsp;建議 = "中等！還有進步空間！"<br>
+                    否則如果 分數 >= 60 那麼<br>
+                    &nbsp;&nbsp;評等 = "D"<br>
+                    &nbsp;&nbsp;建議 = "及格！需要更用功！"<br>
+                    否則<br>
+                    &nbsp;&nbsp;評等 = "F"<br>
+                    &nbsp;&nbsp;建議 = "不及格！要加油了！"<br>
+                    結束
+                </div>
+            </div>
+        </div>
+        
+        <h2><i class="fas fa-tasks icon"></i>進階挑戰：複合條件判斷</h2>
+        <div class="interactive-area">
+            <h3>程式設計情境：運動建議系統</h3>
+            <p>我們要設計一個運動建議系統，根據天氣和溫度來決定適合的運動。</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0;">
+                <div class="slider-container">
+                    <label for="temperatureSlider">請選擇溫度：</label>
+                    <input type="range" id="temperatureSlider" min="0" max="40" value="20">
+                    <div class="slider-value" id="temperatureValue">目前溫度：20℃</div>
+                </div>
+                
+                <div class="slider-container">
+                    <label>請選擇天氣：</label>
+                    <div style="margin-top: 15px;">
+                        <button class="weather-btn" data-weather="sunny">☀️ 晴天</button>
+                        <button class="weather-btn" data-weather="cloudy">⛅ 陰天</button>
+                        <button class="weather-btn" data-weather="rainy">🌧️ 雨天</button>
+                        <button class="weather-btn" data-weather="snowy">❄️ 雪天</button>
+                    </div>
+                    <div class="slider-value" id="weatherValue">目前天氣：晴天</div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin: 20px 0;">
+                <button id="runSportProgram"><i class="fas fa-play-circle icon"></i>執行程式</button>
+                <button class="reset" id="resetSportProgram"><i class="fas fa-redo icon"></i>重新開始</button>
+            </div>
+            
+            <div class="result-area" id="sportProgramResult">
+                請點擊「執行程式」按鈕查看結果
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <h4>程式邏輯：</h4>
+                <div class="multiple-condition-visual">
+                    如果 天氣 == "雪天" 或 天氣 == "雨天" 那麼<br>
+                    &nbsp;&nbsp;建議 = "室內運動（如健身房）"<br>
+                    否則如果 溫度 > 30 那麼<br>
+                    &nbsp;&nbsp;建議 = "游泳"<br>
+                    否則如果 溫度 >= 20 那麼<br>
+                    &nbsp;&nbsp;建議 = "戶外運動（如跑步、騎單車）"<br>
+                    否則如果 溫度 >= 10 那麼<br>
+                    &nbsp;&nbsp;建議 = "快走或慢跑"<br>
+                    否則<br>
+                    &nbsp;&nbsp;建議 = "室內運動（如瑜伽）"<br>
+                    結束
+                </div>
+                <p>注意：這裡使用了「或」邏輯運算子，表示只要其中一個條件成立就執行對應動作。</p>
+            </div>
+        </div>
+        
+        <div class="conclusion">
+            <h2><i class="fas fa-graduation-cap icon"></i>學習總結</h2>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                <div style="flex: 1; min-width: 250px;">
+                    <h3>「如果那麼」積木</h3>
+                    <ul>
+                        <li>只有當條件成立時才會執行動作</li>
+                        <li>條件不成立時，直接跳過這個積木</li>
+                        <li>適合只有一種需要處理的情況</li>
+                    </ul>
+                </div>
+                <div style="flex: 1; min-width: 250px;">
+                    <h3>「如果那麼否則」積木</h3>
+                    <ul>
+                        <li>條件成立時執行「那麼」部分的動作</li>
+                        <li>條件不成立時執行「否則」部分的動作</li>
+                        <li>適合兩種情況都需要處理的時候</li>
+                    </ul>
+                </div>
+                <div style="flex: 1; min-width: 250px;">
+                    <h3>多重條件判斷積木</h3>
+                    <ul>
+                        <li>可以檢查多個條件，根據不同情況執行不同動作</li>
+                        <li>適合三種或更多種情況需要處理</li>
+                        <li>可以巢狀使用，處理更複雜的邏輯</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top: 20px; font-size: 1.1rem;"><strong>記住：</strong>選擇哪種積木取決於你的程式需要處理幾種情況。如果只需要處理一種情況，用「如果那麼」；如果需要處理兩種相反情況，用「如果那麼否則」；如果需要處理三種或更多情況，用多重條件判斷。</p>
+        </div>
+        
+        <footer>
+            <p>圖像化編程條件判斷教學 &copy; 2023 | 設計給小學四、五年級學生</p>
+            <p>使用 Scratch、Blockly 等圖像化編程工具時，你會經常看到這些積木哦！</p>
+        </footer>
+    </div>
+
+    <script>
+        // 題庫：20個題目，包含問題和正確答案
+        const questionBank = [
+            { id: 1, question: "如果作業寫完了，就看電視", answer: "if" },
+            { id: 2, question: "如果考試及格，媽媽給獎勵；否則不能玩電腦", answer: "if-else" },
+            { id: 3, question: "如果天氣熱，就去游泳", answer: "if" },
+            { id: 4, question: "如果時間超過晚上9點，就去睡覺；否則可以看書", answer: "if-else" },
+            { id: 5, question: "根據考試分數給予評等：90分以上A，80-89分B，70-79分C，60-69分D，60分以下F", answer: "multiple" },
+            { id: 6, question: "如果下雨，就帶傘；否則不帶傘", answer: "if-else" },
+            { id: 7, question: "如果考試滿分，爸爸會給獎金", answer: "if" },
+            { id: 8, question: "根據溫度決定穿衣：30度以上穿短袖，20-29度穿長袖，20度以下穿外套", answer: "multiple" },
+            { id: 9, question: "如果看到紅燈，就停下來", answer: "if" },
+            { id: 10, question: "如果分數大於60，顯示及格；否則顯示不及格", answer: "if-else" },
+            { id: 11, question: "根據年齡決定電影分級：18歲以上可看限制級，15-17歲可看輔導級，12-14歲可看保護級，12歲以下可看普遍級", answer: "multiple" },
+            { id: 12, question: "如果今天是星期六，去公園玩；否則去學校", answer: "if-else" },
+            { id: 13, question: "如果溫度高於30度，開冷氣", answer: "if" },
+            { id: 14, question: "根據BMI值判斷體重狀態：過輕、正常、過重、肥胖", answer: "multiple" },
+            { id: 15, question: "如果碰到邊緣，就反彈", answer: "if" },
+            { id: 16, question: "如果分數大於100，顯示勝利；否則顯示繼續努力", answer: "if-else" },
+            { id: 17, question: "根據時間問候：早上說早安，下午說午安，晚上說晚安", answer: "multiple" },
+            { id: 18, question: "如果燈是關的，就打開燈；否則關燈", answer: "if-else" },
+            { id: 19, question: "如果收到訊息，就播放音效", answer: "if" },
+            { id: 20, question: "根據距離決定交通工具：5公里內走路，5-20公里騎單車，20-100公里開車，100公里以上搭火車", answer: "multiple" }
+        ];
+        
+        // 狀態變數
+        let practiceLocked = false;
+        let currentQuestions = [];
+        let answeredQuestions = new Set();
+        
+        // 從題庫中隨機選擇4個題目
+        function getRandomQuestions(count = 4) {
+            // 複製題庫以避免修改原數組
+            const shuffled = [...questionBank].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+        
+        // 生成練習題HTML
+        function renderQuestions() {
+            const container = document.getElementById('practiceContainer');
+            container.innerHTML = '';
+            answeredQuestions.clear();
+            
+            currentQuestions.forEach((q, index) => {
+                const questionNum = index + 1;
+                const questionHTML = `
+                    <div class="practice-item">
+                        <div class="practice-question">${questionNum}. ${q.question}</div>
+                        <div class="practice-options">
+                            <div class="practice-option" data-question="${questionNum}" data-answer="if">
+                                <span>「如果那麼」積木</span>
+                            </div>
+                            <div class="practice-option" data-question="${questionNum}" data-answer="if-else">
+                                <span>「如果那麼否則」積木</span>
+                            </div>
+                            <div class="practice-option" data-question="${questionNum}" data-answer="multiple">
+                                <span>多重條件判斷積木</span>
+                            </div>
+                        </div>
+                        <div class="feedback" id="feedback${questionNum}"></div>
+                    </div>
+                `;
+                container.innerHTML += questionHTML;
+            });
+            
+            // 重新綁定事件
+            bindPracticeEvents();
+        }
+        
+        // 綁定練習題事件
+        function bindPracticeEvents() {
+            document.querySelectorAll('.practice-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    // 如果練習已鎖定（已檢查答案），則不允許選擇
+                    if (practiceLocked) {
+                        return;
+                    }
+                    
+                    const questionNum = this.getAttribute('data-question');
+                    
+                    // 移除同一問題的其他選項的選中狀態
+                    document.querySelectorAll(`.practice-option[data-question="${questionNum}"]`).forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // 添加當前選中的狀態
+                    this.classList.add('selected');
+                    
+                    // 記錄已回答的問題
+                    answeredQuestions.add(questionNum);
+                });
+            });
+        }
+        
+        // 初始化：第一次載入時隨機選擇4題
+        function initPractice() {
+            currentQuestions = getRandomQuestions(4);
+            renderQuestions();
+            practiceLocked = false;
+            
+            // 重置結果區域
+            document.getElementById('practiceSummary').style.display = 'none';
+        }
+        
+        // 檢查答案
+        document.getElementById('checkAnswers').addEventListener('click', function() {
+            // 檢查是否所有問題都已回答
+            const totalQuestions = currentQuestions.length;
+            if (answeredQuestions.size < totalQuestions) {
+                // 顯示未回答的問題
+                let unanswered = [];
+                for (let i = 1; i <= totalQuestions; i++) {
+                    if (!answeredQuestions.has(i.toString())) {
+                        unanswered.push(i);
+                    }
+                }
+                
+                alert(`請先回答所有問題！\n未回答的問題：第 ${unanswered.join(', ')} 題`);
+                return;
+            }
+            
+            let correctCount = 0;
+            
+            // 檢查每個問題的答案
+            for (let i = 0; i < totalQuestions; i++) {
+                const questionNum = i + 1;
+                const selectedOption = document.querySelector(`.practice-option[data-question="${questionNum}"].selected`);
+                const feedback = document.getElementById(`feedback${questionNum}`);
+                const correctAnswer = currentQuestions[i].answer;
+                
+                if (!selectedOption) continue;
+                
+                const userAnswer = selectedOption.getAttribute('data-answer');
+                
+                if (userAnswer === correctAnswer) {
+                    feedback.textContent = "答對了！" + getAnswerExplanation(correctAnswer, currentQuestions[i].question);
+                    feedback.className = "feedback show correct";
+                    selectedOption.classList.add('correct');
+                    selectedOption.classList.remove('incorrect');
+                    correctCount++;
+                } else {
+                    feedback.textContent = `再想想看！${getAnswerExplanation(correctAnswer, currentQuestions[i].question, true)}`;
+                    feedback.className = "feedback show incorrect";
+                    selectedOption.classList.add('incorrect');
+                    selectedOption.classList.remove('correct');
+                }
+                
+                // 鎖定這個問題的選項
+                document.querySelectorAll(`.practice-option[data-question="${questionNum}"]`).forEach(opt => {
+                    opt.classList.add('locked');
+                });
+            }
+            
+            // 鎖定所有選項，防止檢查答案後繼續選擇
+            practiceLocked = true;
+            
+            // 顯示練習結果摘要
+            const practiceSummary = document.getElementById('practiceSummary');
+            const correctCountSpan = document.getElementById('correctCount');
+            const totalQuestionsSpan = document.getElementById('totalQuestions');
+            const summaryMessage = document.getElementById('summaryMessage');
+            
+            correctCountSpan.textContent = correctCount;
+            totalQuestionsSpan.textContent = totalQuestions;
+            practiceSummary.style.display = 'block';
+            
+            if (correctCount === totalQuestions) {
+                summaryMessage.innerHTML = '<div style="color:#27ae60; font-weight:bold;">太棒了！全部答對！你已經掌握條件判斷積木的使用時機了！</div>';
+            } else if (correctCount >= totalQuestions / 2) {
+                summaryMessage.innerHTML = `<div style="color:#f39c12;">不錯哦！答對了 ${correctCount} 題，繼續加油！</div>`;
+            } else {
+                summaryMessage.innerHTML = `<div style="color:#e74c3c;">沒關係，答對了 ${correctCount} 題，再複習一下上面的內容吧！</div>`;
+            }
+        });
+        
+        // 獲取答案解釋
+        function getAnswerExplanation(answerType, question, isIncorrect = false) {
+            const explanations = {
+                'if': '這個情境只有一種情況需要處理，所以使用「如果那麼」積木就足夠了。',
+                'if-else': '這個情境有兩種情況需要處理，所以應該使用「如果那麼否則」積木。',
+                'multiple': '這個情境有三種或更多情況需要處理，所以應該使用多重條件判斷積木。'
+            };
+            
+            if (isIncorrect) {
+                return `正確答案是：${answerType === 'if' ? '「如果那麼」積木' : answerType === 'if-else' ? '「如果那麼否則」積木' : '多重條件判斷積木'}，因為${explanations[answerType]}`;
+            }
+            
+            return explanations[answerType];
+        }
+        
+        // 重新練習（重置當前題目）
+        document.getElementById('resetPractice').addEventListener('click', function() {
+            // 重置所有選項狀態
+            document.querySelectorAll('.practice-option').forEach(option => {
+                option.classList.remove('selected', 'correct', 'incorrect', 'locked');
+            });
+            
+            // 清除反饋訊息
+            document.querySelectorAll('.feedback').forEach(feedback => {
+                feedback.className = "feedback";
+                feedback.textContent = "";
+            });
+            
+            // 隱藏練習結果摘要
+            document.getElementById('practiceSummary').style.display = 'none';
+            
+            // 解除鎖定狀態
+            practiceLocked = false;
+            answeredQuestions.clear();
+        });
+        
+        // 換一批新題目
+        document.getElementById('newQuestions').addEventListener('click', function() {
+            currentQuestions = getRandomQuestions(4);
+            renderQuestions();
+            practiceLocked = false;
+            
+            // 隱藏練習結果摘要
+            document.getElementById('practiceSummary').style.display = 'none';
+        });
+        
+        // 考試成績評等系統
+        const scoreSlider = document.getElementById('scoreSlider');
+        const scoreValue = document.getElementById('scoreValue');
+        const gradeProgramResult = document.getElementById('gradeProgramResult');
+        
+        scoreSlider.addEventListener('input', function() {
+            scoreValue.textContent = `目前分數：${this.value}分`;
+        });
+        
+        // 執行程式：考試成績評等
+        document.getElementById('runGradeProgram').addEventListener('click', function() {
+            const score = parseInt(scoreSlider.value);
+            let grade = '';
+            let advice = '';
+            
+            // 多重條件判斷
+            if (score >= 90) {
+                grade = 'A';
+                advice = '優秀！保持下去！';
+            } else if (score >= 80) {
+                grade = 'B';
+                advice = '良好！繼續努力！';
+            } else if (score >= 70) {
+                grade = 'C';
+                advice = '中等！還有進步空間！';
+            } else if (score >= 60) {
+                grade = 'D';
+                advice = '及格！需要更用功！';
+            } else {
+                grade = 'F';
+                advice = '不及格！要加油了！';
+            }
+            
+            // 顯示結果
+            let resultHTML = `<h4 style="color:#9b59b6;">考試成績評等結果：</h4>`;
+            resultHTML += `<p>分數：<strong>${score}分</strong></p>`;
+            resultHTML += `<div style="background:#e8f4fc; padding:15px; border-radius:8px; margin:15px 0;">`;
+            resultHTML += `<p style="font-size:1.5rem; color:#3498db; margin:0;">評等：<strong>${grade}</strong></p>`;
+            resultHTML += `<p style="font-size:1.2rem; margin:10px 0 0 0;">建議：${advice}</p>`;
+            resultHTML += `</div>`;
+            
+            // 添加視覺化流程
+            resultHTML += `<div style="margin-top:20px; padding:15px; background:#f9f9f9; border-radius:8px;">`;
+            resultHTML += `<h5>程式執行流程：</h5>`;
+            resultHTML += `<div style="font-family:'Courier New', monospace; font-size:0.9rem;">`;
+            
+            if (score >= 90) {
+                resultHTML += `<div style="color:#27ae60;">✓ 分數 >= 90：成立 → 評等 = "A"</div>`;
+            } else {
+                resultHTML += `<div style="color:#7f8c8d;">✗ 分數 >= 90：不成立 → 檢查下一個條件</div>`;
+            }
+            
+            if (score >= 80 && score < 90) {
+                resultHTML += `<div style="color:#27ae60;">✓ 分數 >= 80：成立 → 評等 = "B"</div>`;
+            } else if (score < 90) {
+                resultHTML += `<div style="color:#7f8c8d;">✗ 分數 >= 80：不成立 → 檢查下一個條件</div>`;
+            }
+            
+            if (score >= 70 && score < 80) {
+                resultHTML += `<div style="color:#27ae60;">✓ 分數 >= 70：成立 → 評等 = "C"</div>`;
+            } else if (score < 80) {
+                resultHTML += `<div style="color:#7f8c8d;">✗ 分數 >= 70：不成立 → 檢查下一個條件</div>`;
+            }
+            
+            if (score >= 60 && score < 70) {
+                resultHTML += `<div style="color:#27ae60;">✓ 分數 >= 60：成立 → 評等 = "D"</div>`;
+            } else if (score < 70) {
+                resultHTML += `<div style="color:#7f8c8d;">✗ 分數 >= 60：不成立 → 檢查下一個條件</div>`;
+            }
+            
+            if (score < 60) {
+                resultHTML += `<div style="color:#27ae60;">✓ 所有條件都不成立 → 執行「否則」部分 → 評等 = "F"</div>`;
+            }
+            
+            resultHTML += `</div></div>`;
+            
+            gradeProgramResult.innerHTML = resultHTML;
+        });
+        
+        // 重新開始：考試成績評等
+        document.getElementById('resetGradeProgram').addEventListener('click', function() {
+            scoreSlider.value = 50;
+            scoreValue.textContent = '目前分數：50分';
+            gradeProgramResult.innerHTML = '請點擊「執行程式」按鈕查看結果';
+        });
+        
+        // 運動建議系統
+        const temperatureSlider = document.getElementById('temperatureSlider');
+        const temperatureValue = document.getElementById('temperatureValue');
+        const weatherButtons = document.querySelectorAll('.weather-btn');
+        const weatherValue = document.getElementById('weatherValue');
+        const sportProgramResult = document.getElementById('sportProgramResult');
+        
+        let currentWeather = 'sunny';
+        
+        temperatureSlider.addEventListener('input', function() {
+            temperatureValue.textContent = `目前溫度：${this.value}℃`;
+        });
+        
+        // 設置天氣按鈕事件
+        weatherButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // 移除所有按鈕的選中狀態
+                weatherButtons.forEach(btn => {
+                    btn.style.backgroundColor = '';
+                    btn.style.color = '';
+                });
+                
+                // 設置當前按鈕為選中狀態
+                this.style.backgroundColor = '#3498db';
+                this.style.color = 'white';
+                
+                // 更新當前天氣
+                currentWeather = this.getAttribute('data-weather');
+                
+                // 更新顯示
+                const weatherText = {
+                    'sunny': '晴天',
+                    'cloudy': '陰天',
+                    'rainy': '雨天',
+                    'snowy': '雪天'
+                };
+                weatherValue.textContent = `目前天氣：${weatherText[currentWeather]}`;
+            });
+        });
+        
+        // 設置第一個天氣按鈕為選中狀態
+        if (weatherButtons.length > 0) {
+            weatherButtons[0].style.backgroundColor = '#3498db';
+            weatherButtons[0].style.color = 'white';
+        }
+        
+        // 執行程式：運動建議系統
+        document.getElementById('runSportProgram').addEventListener('click', function() {
+            const temperature = parseInt(temperatureSlider.value);
+            const weatherText = {
+                'sunny': '晴天',
+                'cloudy': '陰天',
+                'rainy': '雨天',
+                'snowy': '雪天'
+            };
+            const weather = weatherText[currentWeather];
+            let suggestion = '';
+            
+            // 複合條件判斷
+            if (currentWeather === 'snowy' || currentWeather === 'rainy') {
+                suggestion = '室內運動（如健身房）';
+            } else if (temperature > 30) {
+                suggestion = '游泳';
+            } else if (temperature >= 20) {
+                suggestion = '戶外運動（如跑步、騎單車）';
+            } else if (temperature >= 10) {
+                suggestion = '快走或慢跑';
+            } else {
+                suggestion = '室內運動（如瑜伽）';
+            }
+            
+            // 顯示結果
+            let resultHTML = `<h4 style="color:#9b59b6;">運動建議系統結果：</h4>`;
+            resultHTML += `<p>天氣：<strong>${weather}</strong>，溫度：<strong>${temperature}℃</strong></p>`;
+            resultHTML += `<div style="background:#e8f4fc; padding:15px; border-radius:8px; margin:15px 0;">`;
+            resultHTML += `<p style="font-size:1.5rem; color:#3498db; margin:0;">建議：<strong>${suggestion}</strong></p>`;
+            resultHTML += `</div>`;
+            
+            // 添加視覺化流程
+            resultHTML += `<div style="margin-top:20px; padding:15px; background:#f9f9f9; border-radius:8px;">`;
+            resultHTML += `<h5>程式執行流程：</h5>`;
+            resultHTML += `<div style="font-family:'Courier New', monospace; font-size:0.9rem;">`;
+            
+            if (currentWeather === 'snowy' || currentWeather === 'rainy') {
+                resultHTML += `<div style="color:#27ae60;">✓ 天氣是雪天或雨天：成立 → 建議室內運動</div>`;
+            } else {
+                resultHTML += `<div style="color:#7f8c8d;">✗ 天氣是雪天或雨天：不成立 → 檢查下一個條件</div>`;
+                
+                if (temperature > 30) {
+                    resultHTML += `<div style="color:#27ae60;">✓ 溫度 > 30：成立 → 建議游泳</div>`;
+                } else {
+                    resultHTML += `<div style="color:#7f8c8d;">✗ 溫度 > 30：不成立 → 檢查下一個條件</div>`;
+                    
+                    if (temperature >= 20) {
+                        resultHTML += `<div style="color:#27ae60;">✓ 溫度 >= 20：成立 → 建議戶外運動</div>`;
+                    } else {
+                        resultHTML += `<div style="color:#7f8c8d;">✗ 溫度 >= 20：不成立 → 檢查下一個條件</div>`;
+                        
+                        if (temperature >= 10) {
+                            resultHTML += `<div style="color:#27ae60;">✓ 溫度 >= 10：成立 → 建議快走或慢跑</div>`;
+                        } else {
+                            resultHTML += `<div style="color:#7f8c8d;">✗ 溫度 >= 10：不成立 → 執行「否則」部分</div>`;
+                            resultHTML += `<div style="color:#27ae60;">✓ 所有條件都不成立 → 建議室內運動</div>`;
+                        }
+                    }
+                }
+            }
+            
+            resultHTML += `</div></div>`;
+            
+            sportProgramResult.innerHTML = resultHTML;
+        });
+        
+        // 重新開始：運動建議系統
+        document.getElementById('resetSportProgram').addEventListener('click', function() {
+            temperatureSlider.value = 20;
+            temperatureValue.textContent = '目前溫度：20℃';
+            
+            // 重置天氣按鈕
+            weatherButtons.forEach(btn => {
+                btn.style.backgroundColor = '';
+                btn.style.color = '';
+            });
+            
+            // 設置第一個按鈕為選中
+            if (weatherButtons.length > 0) {
+                weatherButtons[0].style.backgroundColor = '#3498db';
+                weatherButtons[0].style.color = 'white';
+                currentWeather = 'sunny';
+                weatherValue.textContent = '目前天氣：晴天';
+            }
+            
+            sportProgramResult.innerHTML = '請點擊「執行程式」按鈕查看結果';
+        });
+        
+        // 初始化頁面
+        window.addEventListener('DOMContentLoaded', function() {
+            // 初始化練習題
+            initPractice();
+        });
+    </script>
+</body>
+</html>
